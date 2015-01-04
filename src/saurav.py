@@ -1,11 +1,12 @@
 import lex
+from lex import TOKEN
 
 tokens=[]
 keywordlist = ['and', 'break', 'class', 'continue', 
               'elif', 'else', 'for',
               'if', 'import', 'in', 
               'not', 'or', 'print', 'return', 
-              'while',]
+              'while','def']
 RESERVED = {}
 for keyword in keywordlist:
 	name = keyword.upper()
@@ -17,7 +18,9 @@ tokens = tuple(tokens) + (
 	'LPAREN', 'RPAREN',
 	'EQEQUAL','EQUAL',
 	'COLON', 'SQUOTE','DQUOTE',
-	'NEWLINE','NUMBER','NAME')
+	'NEWLINE','NUMBER','NAME',
+	'INDENT',
+	)
 
 # All tokens defined by functions are added in the same order as they appear in the lexer file.
 # Tokens defined by strings are added next by sorting them in order of decreasing regular expression length (longer expressions are added first).
@@ -47,14 +50,18 @@ def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)    
     return t
+# Indent
+def t_INDENT(t):
+	r'\t'
+	return t
 
 # Define a rule so we can track line numbers
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-# A string containing ignored characters (spaces and tabs)
-t_ignore  = ' \t'
+# A string containing ignored characters (spaces)
+t_ignore  = ' '
 def t_NAME(t):
 	r"[a-zA-Z_][a-zA-Z0-9_]*"
 	t.type = RESERVED.get(t.value, "NAME")
@@ -74,8 +81,18 @@ data = data.read()
 lexer.input(data)
 
 #Tokenize
+tok = lexer.token()
 while True:
-	tok = lexer.token()
-	if (not tok):
-		break # no more input
-	print tok.value,"\t\t\t", tok.type,  tok.lineno, tok.lexpos
+	if(not tok):
+		break
+	lineNo = tok.lineno
+	startToken = tok.value
+	while(lineNo==tok.lineno):
+		print tok.value,
+		#print tok # to get all info of token 
+		tok = lexer.token()
+		if(not tok):
+			break
+	if(tok):
+		print "#",startToken
+# TODO : Need to handle strings. Print output with space after each token is damaging strings
