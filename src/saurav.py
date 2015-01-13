@@ -87,12 +87,15 @@ while True:
 		break
 	lineNo = tok.lineno
 	startToken = tok.value
+	printableToken[:] = []
 	while(lineNo==tok.lineno):
+		printableToken.append(tok.type)
 		print tok.value,
-		#print tok # to get all info of token 
 		tok = lexer.token()
 		if(not tok):
 			break
 	if(tok):
-		print "#",startToken
-# TODO : Need to handle strings. Print output with space after each token is damaging strings
+		print "\t\t#", # improve this
+		for t in printableToken:
+			print t,
+	print ""
