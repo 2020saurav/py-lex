@@ -79,7 +79,7 @@ lexer = lex.lex()
 data = open('../test/test1.py')
 data = data.read()
 lexer.input(data)
-
+printableToken =[]
 #Tokenize
 tok = lexer.token()
 while True:
