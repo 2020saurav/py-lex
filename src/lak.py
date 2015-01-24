@@ -13,10 +13,14 @@ for keyword in keywordlist:
 	RESERVED[keyword] = name
 	tokens.append(name)
 
-tokens = tuple(tokens)+('ARROW','EQEQUAL','NOTEQUAL','LESSEQUAL','LEFTSHIFT','GREATEREQUAL','RIGHTSHIFT','PLUSEQUAL',
-    'MINEQUAL','STAREQUAL','SLASHEQUAL','PERCENTEQUAL','COLON','COMMA','SEMI','PLUS','MINUS','STAR','SLASH',
-    'VBAR','AMPER','LESS','GREATER','EQUAL','DOT','PERCENT','BACKQUOTE','CIRCUMFLEX','TILDE',
-    'AT','LPAR','RPAR','LBRACE','RBRACE','LSQB','RSQB')
+tokens = tuple(tokens) + (	'ARROW','EQEQUAL','NOTEQUAL','LESSEQUAL','LEFTSHIFT',
+							'GREATEREQUAL','RIGHTSHIFT','PLUSEQUAL', 'MINEQUAL',
+							'STAREQUAL','SLASHEQUAL','PERCENTEQUAL','COLON','COMMA',
+							'SEMI','PLUS','MINUS','STAR','SLASH','VBAR','AMPER',
+							'LESS','GREATER','EQUAL','DOT','PERCENT','BACKQUOTE',
+							'CIRCUMFLEX','TILDE','AT','LPAR','RPAR','LBRACE',
+							'RBRACE','LSQB','RSQB')
+
 tokens = tuple(tokens) +('NEWLINE','NUMBER','NAME','INDENT', 'SQUOTE','DQUOTE')
 
 # All tokens defined by functions are added in the same order as they appear in the lexer file.

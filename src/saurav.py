@@ -13,6 +13,7 @@ for keyword in keywordlist:
 	RESERVED[keyword] = name
 	tokens.append(name)
 
+# TODO : ADD MORE TOKENS
 tokens = tuple(tokens) + (
 	'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
 	'LPAREN', 'RPAREN',
@@ -51,6 +52,10 @@ def t_NUMBER(t):
     t.value = int(t.value)    
     return t
 # Indent
+# CANNOT HANDLE INDENTATIONS THIS WAY
+# READ https://docs.python.org/2/reference/lexical_analysis.html FOR DETAILS
+# CONVERT TABS TO SPACES AND MAINTAIN STACK OF INDENTATION COUNT AS SUGGESTED!
+
 def t_INDENT(t):
 	r'\t'
 	return t
@@ -95,7 +100,14 @@ while True:
 		if(not tok):
 			break
 	if(tok):
-		print "\t\t#", # improve this
+		print "\n#", # improve this
 		for t in printableToken:
 			print t,
-	print ""
+	print "\n"
+
+
+# Tabs : replace by 8 spaces and then compute Indentations
+# Handle all types of comments
+# Handle \ on line continutation, no comment continutation using \ (implicit and explicit line join using \)
+# Implit line join, immaterial whit spaces in between 2.1.6
+# 2.1.8 about indentations

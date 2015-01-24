@@ -1,10 +1,10 @@
 def foo(a):
 	print   a
-	print "fo o bar" #dude escape sequences
+	print "fo \n o bar" #dude escape sequences
 	s = ["this",
 		"is",
 		"not",
-		"new",
+	        	"new",
 		"line"]
 
 def main():		
