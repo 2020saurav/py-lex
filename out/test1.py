@@ -11,6 +11,8 @@ def main ( ) :
 # INDENT NAME LPAREN NAME RPAREN NEWLINE 
 	b = "my name is\np ksaurav" 
 # INDENT NAME EQUAL STRING NEWLINE 
+	print b 
+# INDENT PRINT NAME NEWLINE 
 	
 
 # INDENT NEWLINE 

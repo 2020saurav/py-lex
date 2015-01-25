@@ -17,26 +17,53 @@ for keyword in keywordlist:
 
 # TODO : ADD MORE TOKENS
 tokens = tuple(tokens) + (
-	'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
-	'LPAREN', 'RPAREN',
-	'EQEQUAL','EQUAL',
-	'COLON', 
-	'NEWLINE','NUMBER','NAME',
-	'INDENT',
-	'STRING'
+				'ARROW','EQEQUAL','NOTEQUAL','LESSEQUAL','LEFTSHIFT','GREATEREQUAL',
+				'RIGHTSHIFT','PLUSEQUAL','MINEQUAL','STAREQUAL','SLASHEQUAL','PERCENTEQUAL',
+				'COLON','COMMA','SEMI','PLUS','MINUS','STAR','SLASH','VBAR','AMPER','LESS',
+				'GREATER','EQUAL','DOT','PERCENT','BACKQUOTE','CIRCUMFLEX','TILDE',	'AT',
+
+			    'LPAREN', 'RPAREN',
+				'NEWLINE','NUMBER','NAME',
+				'INDENT',
+				'STRING'
 	)
 
 # All tokens defined by functions are added in the same order as they appear in the lexer file.
 # Tokens defined by strings are added next by sorting them in order of decreasing regular expression length (longer expressions are added first).
 # Order important. Match '==' before '=', so put '==' before
 # Regular expression rules for simple tokens
-t_PLUS    = r'\+'
-t_MINUS   = r'-'
-t_TIMES   = r'\*'
-t_DIVIDE  = r'/'
+t_ARROW          = '->'
+
 t_EQEQUAL = r'=='
-t_EQUAL   = r'='
-t_COLON   = r'\:'
+t_NOTEQUAL =  r'!='
+t_LESSEQUAL = r'<='
+t_LEFTSHIFT = r'<<'
+t_GREATEREQUAL = r'>='
+t_RIGHTSHIFT  = r'>>'
+t_PLUSEQUAL = r'\+='
+t_MINEQUAL = r'-='
+t_STAREQUAL = r'\*='
+t_SLASHEQUAL = r'/='
+t_PERCENTEQUAL = r'%='
+
+t_COLON = r':'
+t_COMMA = r','
+t_SEMI  = r';'
+t_PLUS  = r'\+'
+t_MINUS = r'-'
+t_STAR  = r'\*'
+t_SLASH = r'/'
+t_VBAR  = r'\|'
+t_AMPER = r'&'
+t_LESS  = r'<'
+t_GREATER = r'>'
+t_EQUAL = r'='
+t_DOT  = r'\.'
+t_PERCENT = r'%'
+t_BACKQUOTE  = r'`'
+t_CIRCUMFLEX = r'\^'
+t_TILDE = r'~'
+t_AT = r'@'
 
 
 
@@ -66,7 +93,7 @@ def t_STRING(t):
 # Indent
 # CANNOT HANDLE INDENTATIONS THIS WAY
 # READ https://docs.python.org/2/reference/lexical_analysis.html FOR DETAILS
-# CONVERT TABS TO SPACES AND MAINTAIN STACK OF INDENTATION COUNT AS SUGGESTED!
+# CONVERT TABS TO SPACES AND MAINTAIN STACK OF INDENTATION COUNT AS SUGGESTED!  1 Tab = 8 spaces
 
 def t_INDENT(t):
 	r'\t'
@@ -97,7 +124,7 @@ def t_error(t):
 lexer = lex.lex()
 lexer.parenthesisCount = 0
 # get from command line arg
-data = open('../test/test2.py')
+data = open('../test/test1.py')
 data = data.read()
 lexer.input(data)
 printableToken =[]
@@ -110,7 +137,7 @@ while True:
 	startToken = tok.value
 	printableToken[:] = []
 	while(lineNo==tok.lineno):
-		printableToken.append(tok)
+		printableToken.append(tok.type)
 		print tok.value,
 		tok = lexer.token()
 		if(not tok):
@@ -118,7 +145,7 @@ while True:
 	if(tok):
 		print "#", # improve this
 		for t in printableToken:
-			print t.type,
+			print t,
 	print ""
 
 
@@ -130,4 +157,5 @@ while True:
 
 
 
-# HANDLE 1. Strings 2. Escape Sequences 3. TRIPLE AND SINGLE QUOTES 4. brackets
+# HANDLE  3. TRIPLE QUOTES 4. brackets  5. indent dedent  
+# 6. string with rRuU prefix!https://docs.python.org/2.0/ref/strings.html
