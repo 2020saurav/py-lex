@@ -1,8 +1,19 @@
-def foo ( a ) : 		# DEF NAME LPAREN NAME RPAREN COLON 
-	print a 		# INDENT PRINT NAME 
-def main ( ) : 		# DEF NAME LPAREN RPAREN COLON 
-	a = 42 		# INDENT NAME EQUAL NUMBER 
-	foo (a) 		# INDENT NAME LPAREN NAME RPAREN 
-			# INDENT 
-if __name__ == '__main__' : 		# IF NAME EQEQUAL SQUOTE NAME SQUOTE COLON 
-	main () 
+def foo ( a ) : 
+# DEF NAME LPAREN NAME RPAREN COLON NEWLINE 
+	print a 
+
+# INDENT PRINT NAME NEWLINE 
+def main ( ) : 
+# DEF NAME LPAREN RPAREN COLON NEWLINE 
+	a = 42 
+# INDENT NAME EQUAL NUMBER NEWLINE 
+	foo ( a ) 
+# INDENT NAME LPAREN NAME RPAREN NEWLINE 
+	b = "my name is\np ksaurav" 
+# INDENT NAME EQUAL STRING NEWLINE 
+	
+
+# INDENT NEWLINE 
+if __name__ == '__main__' : 
+# IF NAME EQEQUAL STRING COLON NEWLINE 
+	main ( ) 
