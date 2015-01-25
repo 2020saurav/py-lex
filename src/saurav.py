@@ -1,5 +1,6 @@
 import lex
 from lex import TOKEN
+import tokenize
 
 tokens=[]
 keywordlist = [
@@ -15,7 +16,6 @@ for keyword in keywordlist:
 	RESERVED[keyword] = name
 	tokens.append(name)
 
-# TODO : ADD MORE TOKENS
 tokens = tuple(tokens) + (
 				'ARROW','EQEQUAL','NOTEQUAL','LESSEQUAL','LEFTSHIFT','GREATEREQUAL',
 				'RIGHTSHIFT','PLUSEQUAL','MINEQUAL','STAREQUAL','SLASHEQUAL','PERCENTEQUAL',
@@ -25,14 +25,13 @@ tokens = tuple(tokens) + (
 			    'LPAREN', 'RPAREN',
 			    'LBRACE', 'RBRACE',
 			    'LSQB', 'RSQB',
-				'NEWLINE','NUMBER','NAME',
+				'NEWLINE',
+				'FNUMBER', 'NUMBER',
+				'NAME',
 				'INDENT',
 				'STRING', 'TRIPLESTRING'
 	)
 
-# All tokens defined by functions are added in the same order as they appear in the lexer file.
-# Tokens defined by strings are added next by sorting them in order of decreasing regular expression length (longer expressions are added first).
-# Order important. Match '==' before '=', so put '==' before
 # Regular expression rules for simple tokens
 t_ARROW          = '->'
 
@@ -99,10 +98,19 @@ def t_comment(t):
 	r"[ ]*\043[^\n]*"
 	pass
 
+@TOKEN(tokenize.Floatnumber)
+def t_FLOAT_NUMBER(t):
+    t.type = "FNUMBER"
+    # t.value = (float(t.value), t.value)
+    return t
+# FP number above integers    
 def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)    
     return t
+
+
+
 def t_TRIPLESTRING(t):
 	r'(\"\"\"(\\.|[^"])*\"\"\") | (\'\'\'(\\.|[^"])*\'\'\')'
 	return t
@@ -144,7 +152,7 @@ def t_error(t):
 lexer = lex.lex()
 lexer.parenthesisCount = 0
 # get from command line arg
-data = open('../test/test4.py')
+data = open('../test/test2.py')
 data = data.read()
 lexer.input(data)
 printableToken =[]
@@ -177,8 +185,8 @@ while True:
 
 
 
-# HANDLE  4. brackets  5. indent dedent  
+# HANDLE   5. indent dedent  
 # 6. string with rRuU prefix!https://docs.python.org/2.0/ref/strings.html
 # escaped new line in both single quote, triple quote
-# floating, complex numbers
+#  complex numbers
 #error reporting

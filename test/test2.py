@@ -8,9 +8,10 @@ def foo(a):
 		"line"]
 
 def main():		
-	a = 42
+	a = -420.03
+	b = 43
 	foo(a) #indented by
-	if a > 3:
+	if a < 3:
 		print "indented" 
 		print "by tabs"
 	#comment to be ignored by the lexer
