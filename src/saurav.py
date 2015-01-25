@@ -23,9 +23,11 @@ tokens = tuple(tokens) + (
 				'GREATER','EQUAL','DOT','PERCENT','BACKQUOTE','CIRCUMFLEX','TILDE',	'AT',
 
 			    'LPAREN', 'RPAREN',
+			    'LBRACE', 'RBRACE',
+			    'LSQB', 'RSQB',
 				'NEWLINE','NUMBER','NAME',
 				'INDENT',
-				'STRING'
+				'STRING', 'TRIPLESTRING'
 	)
 
 # All tokens defined by functions are added in the same order as they appear in the lexer file.
@@ -75,6 +77,22 @@ def t_RPAREN(t):
 	r"\)"
 	t.lexer.parenthesisCount-=1
 	return t
+def t_LBRACE(t):
+	r"\{"
+	t.lexer.parenthesisCount+=1
+	return t
+def t_RBRACE(t):
+	r"\}"
+	t.lexer.parenthesisCount-=1
+	return t
+def t_LSQB(t):
+	r"\["
+	t.lexer.parenthesisCount+=1
+	return t
+def t_RSQB(t):
+	r"\]"
+	t.lexer.parenthesisCount-=1
+	return t
 
 #ignore comments in source code
 def t_comment(t):
@@ -85,7 +103,9 @@ def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)    
     return t
-
+def t_TRIPLESTRING(t):
+	r'(\"\"\"(\\.|[^"])*\"\"\") | (\'\'\'(\\.|[^"])*\'\'\')'
+	return t
 def t_STRING(t):
 	r'(\"(\\.|[^"])*\") | (\'(\\.|[^"])*\')'
 	return t
@@ -124,7 +144,7 @@ def t_error(t):
 lexer = lex.lex()
 lexer.parenthesisCount = 0
 # get from command line arg
-data = open('../test/test1.py')
+data = open('../test/test4.py')
 data = data.read()
 lexer.input(data)
 printableToken =[]
@@ -157,5 +177,8 @@ while True:
 
 
 
-# HANDLE  3. TRIPLE QUOTES 4. brackets  5. indent dedent  
+# HANDLE  4. brackets  5. indent dedent  
 # 6. string with rRuU prefix!https://docs.python.org/2.0/ref/strings.html
+# escaped new line in both single quote, triple quote
+# floating, complex numbers
+#error reporting

@@ -10,9 +10,9 @@ def foo(a):
 def main():		
 	a = 42
 	foo(a) #indented by
-	if i <3*u :
-	 print "indented" 
-	 print "by sapce"
+	if a > 3:
+		print "indented" 
+		print "by tabs"
 	#comment to be ignored by the lexer
 
 if __name__=='__main__':
