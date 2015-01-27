@@ -13,7 +13,7 @@ d = 'Testing single \
 # e = 'Testing single quote
 # in multiline' 
 # NAME EQUAL STRING NEWLINE 
-
+"fgdf"
 # NEWLINE 
 print a 
 # PRINT NAME NEWLINE 

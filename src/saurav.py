@@ -2,6 +2,10 @@ import lex
 from lex import TOKEN
 import tokenize
 
+NO_INDENT = 0
+MAY_INDENT = 1
+MUST_INDENT = 2
+
 tokens=[]
 keywordlist = [
 				'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 
@@ -28,8 +32,9 @@ tokens = tuple(tokens) + (
 				'NEWLINE',
 				'FNUMBER', 'NUMBER',
 				'NAME',
-				'INDENT',
-				'STRING', 'TRIPLESTRING'
+				'INDENT', 'DEDENT',
+				'STRING', 'TRIPLESTRING',
+				"WS"
 	)
 
 # Regular expression rules for simple tokens
@@ -123,9 +128,9 @@ def t_STRING(t):
 # READ https://docs.python.org/2/reference/lexical_analysis.html FOR DETAILS
 # CONVERT TABS TO SPACES AND MAINTAIN STACK OF INDENTATION COUNT AS SUGGESTED!  1 Tab = 8 spaces
 
-def t_INDENT(t):
-	r'\t'
-	return t
+# def t_INDENT(t):
+# 	r'\t'
+# 	return t
 
 # Define a rule so we can track line numbers
 def t_newline(t):
@@ -136,7 +141,7 @@ def t_newline(t):
     	return t
 
 # A string containing ignored characters (spaces)
-t_ignore  = ' '
+# t_ignore  = ' '
 def t_NAME(t):
 	r"[a-zA-Z_][a-zA-Z0-9_]*"
 	t.type = RESERVED.get(t.value, "NAME")
@@ -148,11 +153,104 @@ def t_error(t):
     print "Illegal character '%s'" % t.value[0]
     t.lexer.skip(1)
 
+# WHITESPACE
+
+def t_WS(t):
+	r" [ \t\f]+ "
+	value = t.value
+	value = value.rsplit("\f", 1)[-1]
+	pos = 0
+	while True:
+		pos = value.find("\t")
+		if pos == -1:
+			break
+		n = 8 - (pos % 8)
+		value = value[:pos] + " "*n + value[pos+1:]
+	t.value = value
+	if t.lexer.parenthesisCount == 0:
+		return t
+def annotate_indentation_state(lexer, token_stream):
+	lexer.at_line_start = at_line_start = True
+	indent = NO_INDENT
+	saw_colon = False
+	for token in token_stream:
+		token.at_line_start = at_line_start
+		if token.type == "ARROW":
+			at_line_start = False
+			indent = MAY_INDENT
+			token.must_indent = False
+		elif token.type == "COLON":
+			at_line_start = False
+			indent = MAY_INDENT
+			token.must_indent = False
+		elif token.type == "NEWLINE":
+			at_line_start = True
+			if indent == MAY_INDENT:
+				indent = MUST_INDENT
+			token.must_indent = False
+		elif token.type == "WS":
+			assert token.at_line_start == True
+			at_line_start = True
+			token.must_indent = False
+		else:
+			if indent == MUST_INDENT:
+				token.must_indent = True
+			else:
+				token.must_indent = False
+			at_line_start = False
+			indent = NO_INDENT
+
+		yield token
+		lexer.at_line_start = at_line_start
+
+def synthesize_indentation_tokens(token_stream):
+	levels = [0]
+	token = None
+	depth = 0
+	prev_was_ws = False
+	for token in token_stream:
+		if token.type == "WS":
+			assert depth == 0
+			depth = len(token.value)
+			prev_was_ws = True
+			continue
+		if token.type == "NEWLINE":
+			depth = 0
+			if prev_was_ws or token.at_line_start:
+				continue
+			yield token
+			continue
+		prev_was_ws = False
+		if token.must_indent:
+			if not (depth > levels[-1]):
+				print "Expected an indented block", token
+			levels.append(depth)
+			yield INDENT(token.lineno)
+		elif token.at_line_start:
+			if depth == levels[-1]:
+				pass
+			elif depth > levels[-1]:
+				print "Unexpected indent", token
+			else:
+				try:
+					i = levels.index(depth)
+				except ValueError:
+					print "Unindent does not match", token
+				for z in range(i+1, len(levels)):
+					yield DEDENT(token.lineno)
+					levels.pop()
+		yield token
+	if len(levels) > 1:
+		assert token is not None
+		for z in range(1, len(levels)):
+			yield DEDENT(token.lineno)
+
+
 # Build the lexer
 lexer = lex.lex()
 lexer.parenthesisCount = 0
 # get from command line arg
-data = open('../test/test2.py')
+data = open('../test/test1.py')
 data = data.read()
 lexer.input(data)
 printableToken =[]
@@ -187,6 +285,6 @@ while True:
 
 # HANDLE   5. indent dedent  
 # 6. string with rRuU prefix!https://docs.python.org/2.0/ref/strings.html
-# escaped new line in both single quote, triple quote
+
 #  complex numbers
 #error reporting

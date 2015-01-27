@@ -3,6 +3,11 @@ def foo(a):
 
 def main():
 	a = 42
+	arr = [ 43, 34,
+		85,
+				89,
+	77
+	]
 	foo(a)
 	b = "my name is\np ksaurav"
 	print b
