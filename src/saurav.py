@@ -267,7 +267,7 @@ lexer = lex.lex()
 lexer.parenthesisCount = 0
 
 # get from command line arg
-filename = '../test/test4.py'
+filename = '../test/test1.py'
 sourcefile = open(filename)
 data = sourcefile.read()
 lexer.input(data)
