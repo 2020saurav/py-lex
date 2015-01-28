@@ -152,7 +152,7 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 # get from command line arg
-data = open('../test/test2.py')
+data = open('../test/test1.py')
 data = data.read()
 lexer.input(data)
 printableToken =[]

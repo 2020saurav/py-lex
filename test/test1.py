@@ -1,5 +1,6 @@
 def foo(a):
 	print a
+	print a+1
 
 def main():
 	a = 42

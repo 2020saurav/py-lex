@@ -71,6 +71,13 @@ t_CIRCUMFLEX = r'\^'
 t_TILDE = r'~'
 t_AT = r'@'
 
+def newToken(newType, lineno):
+	tok = lex.LexToken()
+	tok.type = newType
+	tok.value = "FixThis"
+	tok.lineno = lineno
+	tok.lexpos = -100
+	return tok
 
 
 def t_LPAREN(t):
@@ -167,8 +174,13 @@ def t_WS(t):
 		n = 8 - (pos % 8)
 		value = value[:pos] + " "*n + value[pos+1:]
 	t.value = value
-	if t.lexer.parenthesisCount == 0:
+	if t.lexer.at_line_start and t.lexer.parenthesisCount == 0:
 		return t
+def INDENT(lineno):
+	return newToken("INDENT", lineno)
+def DEDENT(lineno):
+	return newToken("DEDENT",lineno)
+
 def annotate_indentation_state(lexer, token_stream):
 	lexer.at_line_start = at_line_start = True
 	indent = NO_INDENT
@@ -255,7 +267,10 @@ data = data.read()
 lexer.input(data)
 printableToken =[]
 #Tokenize
-tok = lexer.token()
+token_stream = iter(lexer.token, None)
+token_stream = annotate_indentation_state(lexer, token_stream)
+token_stream = synthesize_indentation_tokens(token_stream)
+tok = token_stream.next()
 while True:
 	if(not tok):
 		break
@@ -265,7 +280,11 @@ while True:
 	while(lineNo==tok.lineno):
 		printableToken.append(tok.type)
 		print tok.value,
-		tok = lexer.token()
+		# tok = lexer.token()
+		try:
+			tok = token_stream.next()
+		except:
+			tok = 0
 		if(not tok):
 			break
 	if(tok):
