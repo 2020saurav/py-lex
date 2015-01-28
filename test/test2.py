@@ -12,8 +12,8 @@ def main():
 	b = 43
 	foo(a) #indented by
 	if a < 3:
-		print "indented" 
-		print "by tabs"
+		print "indented ' test ' anything ' \" some random" 
+		print 'by tabs" test " anything \' some fer r r " " " " shit'
 	#comment to be ignored by the lexer
 
 if __name__=='__main__':

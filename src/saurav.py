@@ -8,12 +8,13 @@ MUST_INDENT = 2
 
 tokens=[]
 keywordlist = [
-				'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 
-				'del', 'elif', 'else', 'except', 'exec', 'finally', 'for', 
-				'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'not', 
-				'or', 'pass', 'print', 'raise', 'return', 'try', 'while', 
-				'with', 'yield'
-				]
+		'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 
+		'del', 'elif', 'else', 'except', 'exec', 'finally', 'for', 
+		'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'not', 
+		'or', 'pass', 'print', 'raise', 'return', 'try', 'while', 
+		'with', 'yield'
+		]
+
 RESERVED = {}
 for keyword in keywordlist:
 	name = keyword.upper()
@@ -21,20 +22,20 @@ for keyword in keywordlist:
 	tokens.append(name)
 
 tokens = tuple(tokens) + (
-				'ARROW','EQEQUAL','NOTEQUAL','LESSEQUAL','LEFTSHIFT','GREATEREQUAL',
-				'RIGHTSHIFT','PLUSEQUAL','MINEQUAL','STAREQUAL','SLASHEQUAL','PERCENTEQUAL',
-				'COLON','COMMA','SEMI','PLUS','MINUS','STAR','SLASH','VBAR','AMPER','LESS',
-				'GREATER','EQUAL','DOT','PERCENT','BACKQUOTE','CIRCUMFLEX','TILDE',	'AT',
+		'ARROW','EQEQUAL','NOTEQUAL','LESSEQUAL','LEFTSHIFT','GREATEREQUAL',
+		'RIGHTSHIFT','PLUSEQUAL','MINEQUAL','STAREQUAL','SLASHEQUAL','PERCENTEQUAL',
+		'COLON','COMMA','SEMI','PLUS','MINUS','STAR','SLASH','VBAR','AMPER','LESS',
+		'GREATER','EQUAL','DOT','PERCENT','BACKQUOTE','CIRCUMFLEX','TILDE',	'AT',
 
-			    'LPAREN', 'RPAREN',
-			    'LBRACE', 'RBRACE',
-			    'LSQB', 'RSQB',
-				'NEWLINE',
-				'FNUMBER', 'NUMBER',
-				'NAME',
-				'INDENT', 'DEDENT',
-				'STRING', 'TRIPLESTRING',
-				"WS"
+	    'LPAREN', 'RPAREN',
+	    'LBRACE', 'RBRACE',
+	    'LSQB', 'RSQB',
+		'NEWLINE',
+		'FNUMBER', 'NUMBER',
+		'NAME',
+		'INDENT', 'DEDENT',
+		'STRING', 'TRIPLESTRING',
+		"WS"
 	)
 
 # Regular expression rules for simple tokens
@@ -78,8 +79,6 @@ def newToken(newType, lineno):
 	tok.lineno = lineno
 	tok.lexpos = -100
 	return tok
-
-
 def t_LPAREN(t):
 	r"\("
 	t.lexer.parenthesisCount+=1
@@ -111,9 +110,7 @@ def t_comment(t):
 	pass
 
 @TOKEN(tokenize.Floatnumber)
-def t_FLOAT_NUMBER(t):
-    t.type = "FNUMBER"
-    # t.value = (float(t.value), t.value)
+def t_FNUMBER(t):
     return t
 # FP number above integers    
 def t_NUMBER(t):
@@ -121,25 +118,13 @@ def t_NUMBER(t):
     t.value = int(t.value)    
     return t
 
-
-
 def t_TRIPLESTRING(t):
-	r'(\"\"\"(\\.|[^"])*\"\"\") | (\'\'\'(\\.|[^"])*\'\'\')'
+	r'(\"\"\"(\\.|[^(\"\"\")])*\"\"\") | (\'\'\'(\\.|[^(\'\'\')])*\'\'\')'
 	return t
 def t_STRING(t):
-	r'(\"(\\.|[^"])*\") | (\'(\\.|[^"])*\')'
+	r'(\"(\\.|[^\"])*\") | (\'(\\.|[^\'])*\')'
 	return t
 
-# Indent
-# CANNOT HANDLE INDENTATIONS THIS WAY
-# READ https://docs.python.org/2/reference/lexical_analysis.html FOR DETAILS
-# CONVERT TABS TO SPACES AND MAINTAIN STACK OF INDENTATION COUNT AS SUGGESTED!  1 Tab = 8 spaces
-
-# def t_INDENT(t):
-# 	r'\t'
-# 	return t
-
-# Define a rule so we can track line numbers
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
@@ -147,13 +132,10 @@ def t_newline(t):
     if(t.lexer.parenthesisCount == 0):
     	return t
 
-# A string containing ignored characters (spaces)
-# t_ignore  = ' '
 def t_NAME(t):
 	r"[a-zA-Z_][a-zA-Z0-9_]*"
 	t.type = RESERVED.get(t.value, "NAME")
 	return t
-
 
 # Error handling rule
 def t_error(t):
@@ -161,7 +143,6 @@ def t_error(t):
     t.lexer.skip(1)
 
 # WHITESPACE
-
 def t_WS(t):
 	r" [ \t\f]+ "
 	value = t.value
@@ -257,53 +238,49 @@ def synthesize_indentation_tokens(token_stream):
 		for z in range(1, len(levels)):
 			yield DEDENT(token.lineno)
 
+def printTokenized(filename,tok):
+	sourcefile = open(filename)
+	printableToken =[]
+	lineNo = 1
+	while True:
+		if(not tok):
+			break
+		printableToken[:] = []
+		print sourcefile.readline(),
+		while(lineNo==tok.lineno):
+			printableToken.append(tok.type)
+			try:
+				tok = token_stream.next()
+			except:
+				tok = 0
+			if(not tok):
+				break
+		if(len(printableToken)>0):
+			print "#",
+			for t in printableToken:
+				print t,
+			print ""
+		lineNo+=1
 
 # Build the lexer
 lexer = lex.lex()
 lexer.parenthesisCount = 0
+
 # get from command line arg
-data = open('../test/test1.py')
-data = data.read()
+filename = '../test/test1.py'
+sourcefile = open(filename)
+data = sourcefile.read()
 lexer.input(data)
-printableToken =[]
 #Tokenize
 token_stream = iter(lexer.token, None)
 token_stream = annotate_indentation_state(lexer, token_stream)
 token_stream = synthesize_indentation_tokens(token_stream)
 tok = token_stream.next()
-while True:
-	if(not tok):
-		break
-	lineNo = tok.lineno
-	startToken = tok.value
-	printableToken[:] = []
-	while(lineNo==tok.lineno):
-		printableToken.append(tok.type)
-		print tok.value,
-		# tok = lexer.token()
-		try:
-			tok = token_stream.next()
-		except:
-			tok = 0
-		if(not tok):
-			break
-	if(tok):
-		print "#", # improve this
-		for t in printableToken:
-			print t,
-	print ""
+printTokenized(filename,tok)
 
 
-# Tabs : replace by 8 spaces and then compute Indentations
-# Handle all types of comments
-# Handle \ on line continutation, no comment continutation using \ (implicit and explicit line join using \)
-# Implit line join, immaterial whit spaces in between 2.1.6
-# 2.1.8 about indentations
-
-
-
-# HANDLE   5. indent dedent  
+# TODO
+# triple quote string regex fixing
 # 6. string with rRuU prefix!https://docs.python.org/2.0/ref/strings.html
-
-#  complex numbers
-#error reporting
+# complex numbers
+# error reporting
