@@ -34,7 +34,7 @@ tokens = tuple(tokens) + (
 		'FNUMBER', 'NUMBER',
 		'NAME',
 		'INDENT', 'DEDENT',
-		'STRING', 'TRIPLESTRING',
+		'TRIPLESTRING', 'STRING', 
 		"WS"
 	)
 
