@@ -75,7 +75,7 @@ t_AT = r'@'
 def newToken(newType, lineno):
 	tok = lex.LexToken()
 	tok.type = newType
-	tok.value = "FixThis"
+	tok.value = None
 	tok.lineno = lineno
 	tok.lexpos = -100
 	return tok
@@ -119,7 +119,7 @@ def t_NUMBER(t):
     return t
 
 def t_TRIPLESTRING(t):
-	r'(\"\"\"(\\.|[^(\"\"\")])*\"\"\") | (\'\'\'(\\.|[^(\'\'\')])*\'\'\')'
+	r'(\"\"\"(\\.|[^(\"\"\")])*\"\"\") | (\'\'\'(\\.|[^(\'\'\')])*\'\'\')' # TODO fix this!
 	return t
 def t_STRING(t):
 	r'(\"(\\.|[^\"])*\") | (\'(\\.|[^\'])*\')'
@@ -267,7 +267,7 @@ lexer = lex.lex()
 lexer.parenthesisCount = 0
 
 # get from command line arg
-filename = '../test/test1.py'
+filename = '../test/test4.py'
 sourcefile = open(filename)
 data = sourcefile.read()
 lexer.input(data)
