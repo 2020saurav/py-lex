@@ -1,3 +1,4 @@
+import sys
 import lex
 from lex import TOKEN
 import tokenize
@@ -139,7 +140,7 @@ def t_NAME(t):
 
 # Error handling rule
 def t_error(t):
-    print "Illegal character '%s'" % t.value[0]
+    print "\nERROR: Illegal character '%s' in %s" % (t.value[0], t.value)
     t.lexer.skip(1)
 
 # WHITESPACE
@@ -267,6 +268,9 @@ def printTokenized(filename,tok):
 				tok=0
 			if(not tok):
 				break
+		print ""
+		if(indentlevel>0):
+			print "\t"*indentlevel,
 		print "#",
 		for t in printableToken:
 			print t,
@@ -278,7 +282,7 @@ lexer = lex.lex()
 lexer.parenthesisCount = 0
 
 # get from command line arg
-filename = '../test/test4.py'
+filename = '../test/test2.py'
 sourcefile = open(filename)
 data = sourcefile.read()
 lexer.input(data)
