@@ -119,13 +119,13 @@ def t_FNUMBER(t):
     return t
 # FP number above integers
 def t_BINARYNUMBER(t):
-	r'0[bB]\d+'
+	r'0[bB]([0-1]+)'
 	return t
 def t_OCTALNUMBER(t):
-	r'0[oO]\d+'
+	r'0[oO]([0-7]+)'
 	return t
 def t_HEXADECIMALNUMBER(t):
-	r'0[xX]\d+'
+	r'0[xX]([0-9a-fA-F]+)'
 	return t
 
 def t_NUMBER(t):
