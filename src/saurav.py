@@ -241,33 +241,44 @@ def synthesize_indentation_tokens(token_stream):
 def printTokenized(filename,tok):
 	sourcefile = open(filename)
 	printableToken =[]
-	lineNo = 1
+	indentlevel = 0
 	while True:
 		if(not tok):
 			break
+		if(tok.type == "INDENT"):
+			indentlevel+=1
+			tok = token_stream.next()
+			continue
+		elif(tok.type == "DEDENT"):
+			indentlevel-=1
+			tok = token_stream.next()
+			continue
+		if(indentlevel>0):
+			print "\t"*indentlevel,
+		lineNo = tok.lineno
 		printableToken[:] = []
-		print sourcefile.readline(),
 		while(lineNo==tok.lineno):
-			printableToken.append(tok.type)
+			if (tok.type!="INDENT" and tok.type!="DEDENT" and tok.type!="NEWLINE"):
+				printableToken.append(tok.type)
+				print tok.value,
 			try:
-				tok = token_stream.next()
+				tok=token_stream.next()
 			except:
-				tok = 0
+				tok=0
 			if(not tok):
 				break
-		if(len(printableToken)>0):
-			print "#",
-			for t in printableToken:
-				print t,
-			print ""
-		lineNo+=1
+		print "#",
+		for t in printableToken:
+			print t,
+		print""
+
 
 # Build the lexer
 lexer = lex.lex()
 lexer.parenthesisCount = 0
 
 # get from command line arg
-filename = '../test/test1.py'
+filename = '../test/test3.py'
 sourcefile = open(filename)
 data = sourcefile.read()
 lexer.input(data)

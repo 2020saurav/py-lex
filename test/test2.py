@@ -13,7 +13,7 @@ def main():
 	foo(a) #indented by
 	if a < 3:
 		print "indented ' test ' anything ' \" some random" 
-		print 'by tabs" test " anything \' some fer r r " " " " shit'
+		print 'by tabs" test " anything \' some fer r r " " " " th'
 	#comment to be ignored by the lexer
 
 if __name__=='__main__':

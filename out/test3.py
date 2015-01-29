@@ -1,16 +1,20 @@
-a = """ Testing a 3 \
-			quote string with tabs preserved"""
-b = '''multiline with 
-
-			tabs preserved'''
-c =  "Testing single \
-			quote string with tabs preserved"
-d =  'Testing single \
-			quote string with tabs preserved'
-# e = 'Testing single quote
-# in multiline'
-# THIS IS ^ NOT ALLOWED!
-print a
-print b
-print c
-print d
+for i in range ( 0 , 5 ) : # FOR NAME IN NAME LPAREN NUMBER COMMA NUMBER RPAREN COLON 
+	print i # PRINT NAME 
+	print i * i # PRINT NAME STAR NAME 
+a = "apple" # NAME EQUAL STRING 
+print a # PRINT NAME 
+a = "app\nle" # NAME EQUAL STRING 
+print a # PRINT NAME 
+a = "app\
+ple" # NAME EQUAL STRING 
+print a # PRINT NAME 
+a = "app \\ few" # NAME EQUAL STRING 
+print a # PRINT NAME 
+a = "app\trf" # NAME EQUAL STRING 
+print a # PRINT NAME 
+a = "app'ff'fewf'ewf'ewf" # NAME EQUAL STRING 
+print a # PRINT NAME 
+a = "app''few'e''''''er'ew" # NAME EQUAL STRING 
+print a # PRINT NAME 
+a = "wwef\"erqwr" # NAME EQUAL STRING 
+print a # PRINT NAME 

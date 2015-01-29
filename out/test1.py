@@ -1,27 +1,15 @@
-def   foo ( a ) : 
-# DEF WS NAME LPAREN NAME RPAREN COLON NEWLINE 
-         print   a 
-
-# WS PRINT WS NAME NEWLINE 
-def   main ( ) : 
-# DEF WS NAME LPAREN RPAREN COLON NEWLINE 
-         a   =   42 
-# WS NAME WS EQUAL WS NUMBER NEWLINE 
-         arr   =   [ 43 , 34 , # WS NAME WS EQUAL WS LSQB NUMBER COMMA NUMBER COMMA 
-85 , # NUMBER COMMA 
-89 , # NUMBER COMMA 
-77 # NUMBER 
-] 
-# RSQB NEWLINE 
-         foo ( a ) 
-# WS NAME LPAREN NAME RPAREN NEWLINE 
-         b   =   "my name is\np ksaurav" 
-# WS NAME WS EQUAL WS STRING NEWLINE 
-         print   b 
-# WS PRINT WS NAME NEWLINE 
-         
-
-# WS NEWLINE 
-if   __name__ == '__main__' : 
-# IF WS NAME EQEQUAL STRING COLON NEWLINE 
-         main ( ) 
+def foo ( a ) : # DEF NAME LPAREN NAME RPAREN COLON 
+	print a # PRINT NAME 
+	print a + 1 # PRINT NAME PLUS NUMBER 
+def main ( ) : # DEF NAME LPAREN RPAREN COLON 
+	a = 42 # NAME EQUAL NUMBER 
+	arr = [ 43 , 34 , # NAME EQUAL LSQB NUMBER COMMA NUMBER COMMA 
+	85 , # NUMBER COMMA 
+	89 , # NUMBER COMMA 
+	77 # NUMBER 
+	] # RSQB 
+	foo ( a ) # NAME LPAREN NAME RPAREN 
+	b = "my name is\np ksaurav" # NAME EQUAL STRING 
+	print b # PRINT NAME 
+if __name__ == '__main__' : # IF NAME EQEQUAL STRING COLON 
+	main ( ) # NAME LPAREN RPAREN 

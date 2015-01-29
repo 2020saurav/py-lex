@@ -1,32 +1,17 @@
-def foo ( a ) : 
-# DEF NAME LPAREN NAME RPAREN COLON NEWLINE 
-	print a 
-# INDENT PRINT NAME NEWLINE 
-	print "fo \n o bar" 
-# INDENT PRINT STRING NEWLINE 
-	s = [ "this" , # INDENT NAME EQUAL LSQB STRING COMMA 
-		"is" , # INDENT INDENT STRING COMMA 
-		"not" , # INDENT INDENT STRING COMMA 
-		"new" , # INDENT INDENT STRING COMMA 
-		"line" ] 
-
-# INDENT INDENT STRING RSQB NEWLINE 
-def main ( ) : 		
-# DEF NAME LPAREN RPAREN COLON INDENT INDENT NEWLINE 
-	a = 42.34 
-# INDENT NAME EQUAL NUMBER NEWLINE 
-	foo ( a ) 
-# INDENT NAME LPAREN NAME RPAREN NEWLINE 
-	if a > 3 : 
-# INDENT IF NAME GREATER NUMBER COLON NEWLINE 
-		print "indented" 
-# INDENT INDENT PRINT STRING NEWLINE 
-		print "by tabs" 
-# INDENT INDENT PRINT STRING NEWLINE 
-	
-
-# INDENT NEWLINE 
-if __name__ == '__main__' : 
-# IF NAME EQEQUAL STRING COLON NEWLINE 
-	main ( ) 
-
+def foo ( a ) : # DEF NAME LPAREN NAME RPAREN COLON 
+	print a # PRINT NAME 
+	print "fo \n o bar" # PRINT STRING 
+	s = [ "this" , # NAME EQUAL LSQB STRING COMMA 
+	"is" , # STRING COMMA 
+	"not" , # STRING COMMA 
+	"new" , # STRING COMMA 
+	"line" ] # STRING RSQB 
+def main ( ) : # DEF NAME LPAREN RPAREN COLON 
+	a = - 420.03 # NAME EQUAL MINUS FNUMBER 
+	b = 43 # NAME EQUAL NUMBER 
+	foo ( a ) # NAME LPAREN NAME RPAREN 
+	if a < 3 : # IF NAME LESS NUMBER COLON 
+		print "indented ' test ' anything ' \" some random" # PRINT STRING 
+		print 'by tabs" test " anything \' some fer r r " " " " th' # PRINT STRING 
+if __name__ == '__main__' : # IF NAME EQEQUAL STRING COLON 
+	main ( ) # NAME LPAREN RPAREN 

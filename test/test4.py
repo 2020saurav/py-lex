@@ -3,14 +3,11 @@ a = """ Testing a 3 \
 b = '''multiline with """ test "" t \'\' \'\'\' test :D '' pp
 
 			tabs preserved'''
-c =  "Testing single \
-			quote string with tabs preserved"
-d =  'Testing single \
-			quote string with tabs preserved'
-# e = 'Testing single quote
-# in multiline'
-# THIS IS ^ NOT ALLOWED!
+c = """ xyz \t \ '''''' " " '' ''   ff """
+d = "hel\
+lo"
+# e = "hel PREVENT THIS FROM PASSING
+# o"
 print a
 print b
 print c
-print d
