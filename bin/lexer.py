@@ -6,7 +6,7 @@ import tokenize
 NO_INDENT = 0
 MAY_INDENT = 1
 MUST_INDENT = 2
-
+errorList=[]
 tokens=[]
 keywordlist = [
 		'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 
@@ -149,7 +149,9 @@ def t_NAME(t):
 
 # Error handling rule
 def t_error(t):
-    print "\nERROR: Illegal character '%s' in %s" % (t.value[0], t.value)
+    message = "\n# ERROR: Illegal character '%s' in %s at line %d" % (t.value[0], t.value, t.lineno)
+    print message
+    errorList.append(message)
     t.lexer.skip(1)
 
 # REFERENCE: https://docs.python.org/2/reference/lexical_analysis.html
@@ -314,3 +316,7 @@ token_stream = identifyIndenations(lexer, token_stream)
 token_stream = assignIndentations(token_stream)
 tok = token_stream.next()
 printTokenized(tok)
+if(len(errorList)>0):
+	print "\n\n------\n# Following errors where encountered:"
+	for error in errorList:
+		print error
