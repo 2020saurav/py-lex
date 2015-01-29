@@ -150,6 +150,7 @@ def t_error(t):
     print "\nERROR: Illegal character '%s' in %s" % (t.value[0], t.value)
     t.lexer.skip(1)
 
+# REFERENCE: https://docs.python.org/2/reference/lexical_analysis.html
 # WHITESPACE
 def t_WS(t):
 	r" [ \t\f]+ "
@@ -160,74 +161,86 @@ def t_WS(t):
 		pos = value.find("\t")
 		if pos == -1:
 			break
-		n = 8 - (pos % 8)
+		n = 8 - (pos % 8)								# Convert each \t to 8 spaces (Python Documentation)
 		value = value[:pos] + " "*n + value[pos+1:]
 	t.value = value
-	if t.lexer.at_line_start and t.lexer.parenthesisCount == 0:
+	if t.lexer.atLineStart and t.lexer.parenthesisCount == 0:
 		return t
 def INDENT(lineno):
 	return newToken("INDENT", lineno)
 def DEDENT(lineno):
 	return newToken("DEDENT",lineno)
+# From Python 2 documentation:
+# The indentation levels of consecutive lines are used to generate INDENT and DEDENT tokens, 
+# using a stack, as follows.
+# Before the first line of the file is read, a single zero is pushed on the stack; 
+# this will never be popped off again. The numbers pushed on the stack will always 
+# be strictly increasing from bottom to top. At the beginning of each logical line, 
+# the line's indentation level is compared to the top of the stack. If it is equal, 
+# nothing happens. If it is larger, it is pushed on the stack, and one INDENT token 
+# is generated. If it is smaller, it must be one of the numbers occurring on the stack; 
+# all numbers on the stack that are larger are popped off, and for each number popped 
+# off a DEDENT token is generated. At the end of the file, a DEDENT token is generated 
+# for each number remaining on the stack that is larger than zero.
 
-def annotate_indentation_state(lexer, token_stream):
-	lexer.at_line_start = at_line_start = True
+def identifyIndenations(lexer, token_stream):
+	lexer.atLineStart = atLineStart = True
 	indent = NO_INDENT
 	saw_colon = False
 	for token in token_stream:
-		token.at_line_start = at_line_start
+		token.atLineStart = atLineStart
 		if token.type == "ARROW":
-			at_line_start = False
+			atLineStart = False
 			indent = MAY_INDENT
 			token.must_indent = False
 		elif token.type == "COLON":
-			at_line_start = False
+			atLineStart = False
 			indent = MAY_INDENT
 			token.must_indent = False
 		elif token.type == "NEWLINE":
-			at_line_start = True
+			atLineStart = True
 			if indent == MAY_INDENT:
-				indent = MUST_INDENT
+				indent = MUST_INDENT  			# MUST INDENT
 			token.must_indent = False
 		elif token.type == "WS":
-			assert token.at_line_start == True
-			at_line_start = True
+			assert token.atLineStart == True
+			atLineStart = True
 			token.must_indent = False
 		else:
 			if indent == MUST_INDENT:
 				token.must_indent = True
 			else:
 				token.must_indent = False
-			at_line_start = False
+			atLineStart = False
 			indent = NO_INDENT
 
 		yield token
-		lexer.at_line_start = at_line_start
+		lexer.atLineStart = atLineStart
 
-def synthesize_indentation_tokens(token_stream):
+def assignIndentations(token_stream):
 	levels = [0]
 	token = None
 	depth = 0
-	prev_was_ws = False
+	lastSeenWhitespace = False
 	for token in token_stream:
 		if token.type == "WS":
 			assert depth == 0
 			depth = len(token.value)
-			prev_was_ws = True
+			lastSeenWhitespace = True
 			continue
 		if token.type == "NEWLINE":
 			depth = 0
-			if prev_was_ws or token.at_line_start:
+			if lastSeenWhitespace or token.atLineStart:
 				continue
 			yield token
 			continue
-		prev_was_ws = False
+		lastSeenWhitespace = False
 		if token.must_indent:
 			if not (depth > levels[-1]):
 				print "Expected an indented block", token
 			levels.append(depth)
 			yield INDENT(token.lineno)
-		elif token.at_line_start:
+		elif token.atLineStart:
 			if depth == levels[-1]:
 				pass
 			elif depth > levels[-1]:
@@ -246,8 +259,7 @@ def synthesize_indentation_tokens(token_stream):
 		for z in range(1, len(levels)):
 			yield DEDENT(token.lineno)
 
-def printTokenized(filename,tok):
-	sourcefile = open(filename)
+def printTokenized(tok):
 	printableToken =[]
 	indentlevel = 0
 	while True:
@@ -296,9 +308,7 @@ data = sourcefile.read()
 lexer.input(data)
 #Tokenize
 token_stream = iter(lexer.token, None)
-token_stream = annotate_indentation_state(lexer, token_stream)
-token_stream = synthesize_indentation_tokens(token_stream)
+token_stream = identifyIndenations(lexer, token_stream)
+token_stream = assignIndentations(token_stream)
 tok = token_stream.next()
-printTokenized(filename,tok)
-# complex numbers
-# error reporting
+printTokenized(tok)
