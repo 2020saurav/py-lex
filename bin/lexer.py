@@ -133,6 +133,8 @@ def t_UNICODESTRING(t):
 def t_STRING(t):
 	r'(\"(\\.|[^\"\n]|(\\\n))*\") | (\'(\\.|[^\'\n]|(\\\n))*\')'
 	return t
+def t_continueLine(t):
+	r'\\(\n)+'
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
