@@ -300,5 +300,4 @@ token_stream = annotate_indentation_state(lexer, token_stream)
 token_stream = synthesize_indentation_tokens(token_stream)
 tok = token_stream.next()
 printTokenized(filename,tok)
-# complex numbers
 # error reporting

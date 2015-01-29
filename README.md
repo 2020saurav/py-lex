@@ -17,6 +17,10 @@ make
 ```
 bin/lexer path/to/file
 ```
+3. To clean the executables, run make clean.
+```
+make clean
+```
 
 ### Directory Structure
 _______________________
