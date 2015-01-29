@@ -32,7 +32,9 @@ tokens = tuple(tokens) + (
 	    'LBRACE', 'RBRACE',
 	    'LSQB', 'RSQB',
 		'NEWLINE',
-		'INUMBER','FNUMBER', 'NUMBER',
+		'INUMBER','FNUMBER',
+		'BINARYNUMBER','OCTALNUMBER','HEXADECIMALNUMBER', 
+		'NUMBER',
 		'INDENT', 'DEDENT',
 		'TRIPLESTRING', 'STRING', 
 		'RAWSTRING','UNICODESTRING',
@@ -115,7 +117,17 @@ def t_INUMBER(t):
 @TOKEN(tokenize.Floatnumber)
 def t_FNUMBER(t):
     return t
-# FP number above integers    
+# FP number above integers
+def t_BINARYNUMBER(t):
+	r'0[bB]\d+'
+	return t
+def t_OCTALNUMBER(t):
+	r'0[oO]\d+'
+	return t
+def t_HEXADECIMALNUMBER(t):
+	r'0[xX]\d+'
+	return t
+
 def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)    
