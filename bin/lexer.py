@@ -272,12 +272,18 @@ def printTokenized(tok):
 		if(tok.type == "INDENT"):
 			indentlevel+=1
 			printableToken.append(tok.type)
-			tok = token_stream.next()
+			try:
+				tok=token_stream.next()
+			except:
+				tok=0
 			continue
 		elif(tok.type == "DEDENT"):
 			indentlevel-=1
 			printableToken.append(tok.type)
-			tok = token_stream.next()
+			try:
+				tok=token_stream.next()
+			except:
+				tok=0
 			continue
 		if(indentlevel>0):
 			print "\t"*indentlevel,
