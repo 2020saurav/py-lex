@@ -33,10 +33,10 @@ tokens = tuple(tokens) + (
 	    'LSQB', 'RSQB',
 		'NEWLINE',
 		'FNUMBER', 'NUMBER',
-		'NAME',
 		'INDENT', 'DEDENT',
 		'TRIPLESTRING', 'STRING', 
-		"WS"
+		'RAWSTRING','UNICODESTRING',
+		'NAME','WS'
 	)
 
 # Regular expression rules for simple tokens
@@ -122,10 +122,15 @@ def t_NUMBER(t):
 def t_TRIPLESTRING(t):
 	r'"{3}([\s\S]*?"{3}) | \'{3}([\s\S]*?\'{3})'
 	return t
+def t_RAWSTRING(t):
+	r'[rR](\"(\\.|[^\"])*\") | [rR](\'(\\.|[^\'])*\')'
+	return t
+def t_UNICODESTRING(t):
+	r'[uU](\"(\\.|[^\"])*\") | [uU](\'(\\.|[^\'])*\')'
+	return t
 def t_STRING(t):
 	r'(\"(\\.|[^\"])*\") | (\'(\\.|[^\'])*\')'
 	return t
-
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
@@ -282,7 +287,7 @@ lexer = lex.lex()
 lexer.parenthesisCount = 0
 
 # get from command line arg
-filename = '../test/test2.py'
+filename = 'saurav.py'
 sourcefile = open(filename)
 data = sourcefile.read()
 lexer.input(data)
@@ -293,9 +298,6 @@ token_stream = synthesize_indentation_tokens(token_stream)
 tok = token_stream.next()
 printTokenized(filename,tok)
 
-
-# TODO
-# triple quote string regex fixing
 # 6. string with rRuU prefix!https://docs.python.org/2.0/ref/strings.html
 # complex numbers
 # error reporting
