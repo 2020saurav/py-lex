@@ -6,7 +6,7 @@ b = '''multiline with """ test "" t \'\' \'\'\' test :D '' pp
 c = """ xyz \t \ '''''' " " '' ''   ff """
 d = "hel\
 lo"
-# e = "hel PREVENT THIS FROM PASSING
+# e = "hello PREVENT THIS FROM PASSING
 # o"
 print a
 print b

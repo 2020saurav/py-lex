@@ -119,7 +119,7 @@ def t_NUMBER(t):
     return t
 
 def t_TRIPLESTRING(t):
-	r'(\"\"\"(\\.|[^(\"\"\")])*\"\"\") | (\'\'\'(\\.|[^(\'\'\')])*\'\'\')' # TODO fix this!
+	r'"{3}([\s\S]*?"{3}) | \'{3}([\s\S]*?\'{3})'
 	return t
 def t_STRING(t):
 	r'(\"(\\.|[^\"])*\") | (\'(\\.|[^\'])*\')'
@@ -278,7 +278,7 @@ lexer = lex.lex()
 lexer.parenthesisCount = 0
 
 # get from command line arg
-filename = '../test/test3.py'
+filename = '../test/test4.py'
 sourcefile = open(filename)
 data = sourcefile.read()
 lexer.input(data)
