@@ -253,18 +253,19 @@ def printTokenized(filename,tok):
 			break
 		if(tok.type == "INDENT"):
 			indentlevel+=1
+			printableToken.append(tok.type)
 			tok = token_stream.next()
 			continue
 		elif(tok.type == "DEDENT"):
 			indentlevel-=1
+			printableToken.append(tok.type)
 			tok = token_stream.next()
 			continue
 		if(indentlevel>0):
 			print "\t"*indentlevel,
 		lineNo = tok.lineno
-		printableToken[:] = []
 		while(lineNo==tok.lineno):
-			if (tok.type!="INDENT" and tok.type!="DEDENT" and tok.type!="NEWLINE"):
+			if (tok.type!="NEWLINE" and tok.type!="INDENT" and tok.type!="DEDENT"):
 				printableToken.append(tok.type)
 				print tok.value,
 			try:
@@ -280,14 +281,14 @@ def printTokenized(filename,tok):
 		for t in printableToken:
 			print t,
 		print""
-
+		printableToken[:] = []
 
 # Build the lexer
 lexer = lex.lex()
 lexer.parenthesisCount = 0
 
 # get from command line arg
-filename = 'saurav.py'
+filename = '../test/test1.py'
 sourcefile = open(filename)
 data = sourcefile.read()
 lexer.input(data)
