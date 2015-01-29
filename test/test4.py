@@ -1,13 +1,4 @@
-a = """ Testing a 3 \
-			quote string with tabs preserved ' test " some test "" three test \"\"\" ''' tt """
-b = '''multiline with """ test "" t \'\' \'\'\' test :D '' pp
-
-			tabs preserved'''
-c = """ xyz \t \ '''''' " " '' ''   ff """
-d = "hel\
-lo"
-# e = "hello PREVENT THIS FROM PASSING
-# o"
-print a
-print b
-print c
+a = "this is allowed\
+by python"
+# b= "this is not
+# allowed by python"
