@@ -32,7 +32,7 @@ tokens = tuple(tokens) + (
 	    'LBRACE', 'RBRACE',
 	    'LSQB', 'RSQB',
 		'NEWLINE',
-		'FNUMBER', 'NUMBER',
+		'INUMBER','FNUMBER', 'NUMBER',
 		'INDENT', 'DEDENT',
 		'TRIPLESTRING', 'STRING', 
 		'RAWSTRING','UNICODESTRING',
@@ -109,7 +109,9 @@ def t_RSQB(t):
 def t_comment(t):
 	r"[ ]*\043[^\n]*"
 	pass
-
+@TOKEN(tokenize.Imagnumber)
+def t_INUMBER(t):
+    return t
 @TOKEN(tokenize.Floatnumber)
 def t_FNUMBER(t):
     return t
